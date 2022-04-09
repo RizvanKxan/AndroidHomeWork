@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:backgroundTint="#D5E3D7"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/MainTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Отметьте ваши навыки:"
+        android:textColor="#000000"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf= "parent"
+        app:layout_constraintBottom_toTopOf="@id/constraintTop"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@id/MainTextView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/constraintBottom">
+
+        <CheckBox
+            android:id="@+id/JavaCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onCheckboxClicked"
+            android:text="Java"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints,NestedWeights" />
+
+        <CheckBox
+            android:id="@+id/AndroidCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Android"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintTop_toBottomOf="@id/JavaCheckBox"
+            tools:ignore="MissingConstraints"/>
+
+        <CheckBox
+            android:id="@+id/XMLCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="XML"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:onClick="onCheckboxClicked"
+            app:layout_constraintTop_toBottomOf="@id/AndroidCheckBox"
+            tools:ignore="MissingConstraints"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/constraintBottom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingConstraints"
+    app:layout_constraintTop_toBottomOf="@id/constraintTop"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/button">
+
+
+    <TextView
+        android:id="@+id/JavaTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Java"
+        android:textColor="#28782B"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/AndroidTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Android"
+        android:textColor="#28782B"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/JavaTextView"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/XMLTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="XML"
+        android:textColor="#28782B"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/AndroidTextView"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonClick"
+        android:text="Next Task"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ListOfEmployees</string>
+    <string name="menuItemAdd">Добавить сотрудника</string>
+    <string name="menuItemRemove">Удалить сотрудника</string>
+    <string name="menuItemEdit">Изменить сотрудника</string>
+    <string name="mainTitle">Список сотрудников</string>
+    <string name="genderMan">Мужчина</string>
+    <string name="genderWoman">Женщина</string>
+</resources>

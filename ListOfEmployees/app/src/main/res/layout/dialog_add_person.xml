@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/title_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="10sp"
+            android:text="Добавить сотрудника"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/tv_second_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Фамилия"
+            android:textSize="20sp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@id/et_second_name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/et_second_name"
+            app:layout_constraintRight_toLeftOf="@id/et_second_name"
+            app:layout_constraintTop_toTopOf="@id/et_second_name" />
+
+        <EditText
+            android:id="@+id/et_second_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="8"
+            android:inputType="textPersonName|textCapWords"
+            android:hint="Введите фамилию:"
+            app:layout_constraintBottom_toTopOf="@id/radioGroup"
+            app:layout_constraintLeft_toLeftOf="@id/et_first_name"
+            app:layout_constraintLeft_toRightOf="@id/tv_second_name"
+            app:layout_constraintRight_toRightOf="@id/et_first_name"
+            app:layout_constraintTop_toBottomOf="@id/title_dialog" />
+
+        <TextView
+            android:id="@+id/tv_first_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Имя"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/et_first_name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/et_second_name"
+            app:layout_constraintTop_toTopOf="@id/et_first_name" />
+
+        <EditText
+            android:id="@+id/et_first_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName|textCapWords"
+            android:hint="Введите имя:"
+            app:layout_constraintBottom_toTopOf="@id/radioGroup"
+            app:layout_constraintLeft_toRightOf="@id/tv_first_name"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_second_name" />
+
+        <TextView
+            android:id="@+id/tv_gender"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Пол"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/radioGroup"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/et_first_name"
+            app:layout_constraintTop_toTopOf="@id/radioGroup" />
+
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/pickedDate"
+            app:layout_constraintLeft_toLeftOf="@id/et_first_name"
+            app:layout_constraintRight_toRightOf="@id/et_first_name"
+            app:layout_constraintTop_toBottomOf="@+id/et_first_name">
+
+            <RadioButton
+                android:id="@+id/isMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/genderMan"
+                tools:ignore="UsingOnClickInXml" />
+
+            <ImageView
+                android:id="@+id/image_gender_dialog"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/man" />
+
+            <RadioButton
+                android:id="@+id/isFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/genderWoman" />
+
+            <ImageView
+                android:id="@+id/image_gender_dialog"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/woman" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/tv_date_of_birt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Дата рождения"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/pickedDate"
+            app:layout_constraintTop_toBottomOf="@+id/pickedDate"
+            app:layout_constraintTop_toTopOf="@id/pickedDate" />
+
+        <DatePicker
+            android:id="@+id/pickedDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_date_of_birt"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup"
+            android:visibility="visible"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

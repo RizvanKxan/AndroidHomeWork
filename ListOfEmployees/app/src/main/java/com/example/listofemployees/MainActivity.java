@@ -130,11 +130,12 @@ public class MainActivity extends AppCompatActivity implements IAction {
                 curItem = position;
                 MainActivity.this.curView = view;
                 MainActivity.this.curView.setBackgroundColor(MainActivity.this.selectedColor);
+                adapter.notifyDataSetChanged(); //--- если не использовать, то возникают проблемы
+                //--- и предыдущее выделение не всегда стирается
             }
         });
 
     }
-
 
     @Override
     protected void onDestroy() {

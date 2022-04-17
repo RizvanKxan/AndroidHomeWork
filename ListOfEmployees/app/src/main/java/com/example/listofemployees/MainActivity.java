@@ -154,13 +154,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
         ///--- и даже можно будет словить exception ------------
     }
 
-    @Override
-    public void editPerson(int personID, String firstName, String secondName, boolean isFemale, Calendar dareOfBirth) {
-        personList.add(new Person(firstName,secondName, dareOfBirth, isFemale));
-        adapter.notifyDataSetChanged(); //<--- без этого ListView не синхронизирует отоображение ------------
-        ///--- и даже можно будет словить exception ------------
-    }
-
     public void showDialog(MenuItem item) {
         CustomDialogFragment dialog = new CustomDialogFragment();
         dialog.show(getSupportFragmentManager(), "custom");

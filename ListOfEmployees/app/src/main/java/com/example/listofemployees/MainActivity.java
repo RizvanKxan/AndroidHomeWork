@@ -54,60 +54,62 @@ public class MainActivity extends AppCompatActivity implements IAction {
     private View curView = null;
     //--- Название файла в котором будем хранить сотрудников
     private static final String FILE_NAME = "person.json";
-
+    //--- Переменные для хранения информации о выделенном сотруднике, использую
+    //--- для того чтобы в диалоге подтянуть информацию о сотруднике
     public static boolean isEditingDialog = false;
     public static String firstNameEditingPerson = "";
     public static String secondNameEditingPerson = "";
     public static boolean isFemaleEditingPerson = false;
 
     //--- Записываем список с сотрудниками в файл в виде json.
-    public void savePersonsToFile(MainActivity view){
+    public void savePersonsToFile(MainActivity view) {
         boolean result = JSONHelper.exportToJSON(this, personList);
-        if(result){
+        if (result) {
             Toast.makeText(this, "Данные сохранены.", Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             Toast.makeText(this, "Не удалось сохранить данные.", Toast.LENGTH_LONG).show();
         }
     }
 
     //--- Считываем объекты из файла и записываем в наш список
-    public void getPersonsFromFile(MainActivity view){
-        listView = findViewById(R.id.list_view);
+    public void getPersonsFromFile(MainActivity view) {
         try {
             personList = JSONHelper.importFromJSON(this);
-        } catch (Exception ex) {
-        }
-            if(personList!=null){
-                adapter = new PersonAdapter(
-                        this,
-                        R.layout.item_person,
-                        R.id.tv_name,
-                        personList
-                );
-                listView.setAdapter(adapter);
+            if (personList != null) {
                 Toast.makeText(this, "Данные восстановлены", Toast.LENGTH_LONG).show();
-            }
-            else{
+            } else {
                 Toast.makeText(this, "Не удалось открыть данные", Toast.LENGTH_LONG).show();
             }
+        } catch (Exception exception) {
+        }
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         //--- Проверяем есть ли файл с нашим именем и если нет, то создаём его
-            FileOutputStream fos = null;
-            try {
-                fos = openFileOutput(FILE_NAME, MODE_APPEND);
-                Toast.makeText(this, "Файл создан.", Toast.LENGTH_SHORT).show();
-            }
-            catch (Exception e) {
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_APPEND);
+            Toast.makeText(this, "Файл создан.", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         getPersonsFromFile(this);
+
+        listView = findViewById(R.id.list_view);
+        adapter = new PersonAdapter(
+                this,
+                R.layout.item_person,
+                R.id.tv_name,
+                personList
+        );
+        listView.setAdapter(adapter);
 
         //--- Устанавливаем изоображения для наших Bitmap из Assets ------------
         try {
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
 
     @Override
     public void addPerson(String firstName, String secondName, boolean isFemale, Calendar dateOfBirth) {
-        personList.add(new Person(firstName,secondName, dateOfBirth, isFemale));
+        personList.add(new Person(firstName, secondName, dateOfBirth, isFemale));
         adapter.notifyDataSetChanged(); //<--- без этого ListView не синхронизирует отоображение ------------
         ///--- и даже можно будет словить exception ------------
     }
@@ -158,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
         CustomDialogFragment dialog = new CustomDialogFragment();
         dialog.show(getSupportFragmentManager(), "custom");
     }
+
     //--- Добавляем меню ------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,15 +173,15 @@ public class MainActivity extends AppCompatActivity implements IAction {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch(id){
+        switch (id) {
             case R.id.add_person:
                 showDialog(item);
                 return true;
             case R.id.remove_person:
-                if(!adapter.isEmpty() && curItem != -1) {
+                if (!adapter.isEmpty() && curItem != -1) {
                     Person person = adapter.getItem(curItem);
                     adapter.remove(person);
-                    curItem = curItem-1;
+                    curItem = curItem - 1;
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Внимание!")
@@ -190,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
                 return true;
             case R.id.edit_person:
 
-                if(!adapter.isEmpty() && curItem != -1) {
+                if (!adapter.isEmpty() && curItem != -1) {
                     isEditingDialog = true;
                     Person person = adapter.getItem(curItem);
                     firstNameEditingPerson = person.firstName;
@@ -254,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
     }
 
 
-
     public static class Person {
         private int personID = 0;
         private final String firstName;
@@ -288,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
             str += this.birthDay.get(Calendar.YEAR);
             return str;
         }
+
         //--- Приводим дату рождения из чисел к типу Calendar ------------
         public static Calendar makeCalendar(int day, int month, int year) {
             Calendar C = Calendar.getInstance();
@@ -321,8 +324,8 @@ public class MainActivity extends AppCompatActivity implements IAction {
             dataItems.setPersons(dataList);
             String jsonString = gson.toJson(dataItems);
 
-            try(FileOutputStream fileOutputStream =
-                        context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
+            try (FileOutputStream fileOutputStream =
+                         context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
                 fileOutputStream.write(jsonString.getBytes());
                 return true;
             } catch (Exception e) {
@@ -333,14 +336,13 @@ public class MainActivity extends AppCompatActivity implements IAction {
         }
 
         static ArrayList<Person> importFromJSON(Context context) {
-            try(FileInputStream fileInputStream = context.openFileInput(FILE_NAME);
-                InputStreamReader streamReader = new InputStreamReader(fileInputStream)){
+            try (FileInputStream fileInputStream = context.openFileInput(FILE_NAME);
+                 InputStreamReader streamReader = new InputStreamReader(fileInputStream)) {
 
                 Gson gson = new Gson();
                 DataItems dataItems = gson.fromJson(streamReader, DataItems.class);
-                return  dataItems.getPersons();
-            }
-            catch (IOException ex){
+                return dataItems.getPersons();
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
@@ -353,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
             ArrayList<Person> getPersons() {
                 return persons;
             }
+
             void setPersons(ArrayList<Person> persons) {
                 this.persons = persons;
             }

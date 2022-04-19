@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class JSONHelper {
 
-    static boolean exportToJSON(Context context, ArrayList<MainActivity.Person> dataList) {
+    static boolean exportToJSON(Context context, ArrayList<Person> dataList) {
 
         Gson gson = new Gson();
         DataItems dataItems = new DataItems();
@@ -30,7 +30,7 @@ public class JSONHelper {
         return false;
     }
 
-    static ArrayList<MainActivity.Person> importFromJSON(Context context) {
+    static ArrayList<Person> importFromJSON(Context context) {
         try (FileInputStream fileInputStream = context.openFileInput(FILE_NAME);
              InputStreamReader streamReader = new InputStreamReader(fileInputStream)) {
 
@@ -45,13 +45,13 @@ public class JSONHelper {
     }
 
     private static class DataItems {
-        private ArrayList<MainActivity.Person> persons;
+        private ArrayList<Person> persons;
 
-        ArrayList<MainActivity.Person> getPersons() {
+        ArrayList<Person> getPersons() {
             return persons;
         }
 
-        void setPersons(ArrayList<MainActivity.Person> persons) {
+        void setPersons(ArrayList<Person> persons) {
             this.persons = persons;
         }
     }

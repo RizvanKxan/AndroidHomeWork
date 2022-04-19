@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
     //--- Ссылка на виджет текущего выбранного элемента списка ------------
     private View curView = null;
     //--- Название файла в котором будем хранить сотрудников
-    private static final String FILE_NAME = "person.json";
+    public static final String FILE_NAME = "person.json";
     //--- Переменные для хранения информации о выделенном сотруднике, использую
     //--- для того чтобы в диалоге подтянуть информацию о сотруднике
     public static boolean isEditingDialog = false;
@@ -306,53 +306,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
                     ", birthDay=" + birthDay +
                     ", isFemale=" + isFemale +
                     '}';
-        }
-    }
-
-    static class JSONHelper {
-
-        static boolean exportToJSON(Context context, ArrayList<Person> dataList) {
-
-            Gson gson = new Gson();
-            DataItems dataItems = new DataItems();
-            dataItems.setPersons(dataList);
-            String jsonString = gson.toJson(dataItems);
-
-            try (FileOutputStream fileOutputStream =
-                         context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
-                fileOutputStream.write(jsonString.getBytes());
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-
-        static ArrayList<Person> importFromJSON(Context context) {
-            try (FileInputStream fileInputStream = context.openFileInput(FILE_NAME);
-                 InputStreamReader streamReader = new InputStreamReader(fileInputStream)) {
-
-                Gson gson = new Gson();
-                DataItems dataItems = gson.fromJson(streamReader, DataItems.class);
-                return dataItems.getPersons();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            return null;
-        }
-
-        private static class DataItems {
-            private ArrayList<Person> persons;
-
-            ArrayList<Person> getPersons() {
-                return persons;
-            }
-
-            void setPersons(ArrayList<Person> persons) {
-                this.persons = persons;
-            }
         }
     }
 }

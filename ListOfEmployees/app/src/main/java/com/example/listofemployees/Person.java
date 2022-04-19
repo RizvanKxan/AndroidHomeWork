@@ -5,9 +5,9 @@ import androidx.annotation.NonNull;
 import java.util.Calendar;
 
 public class Person {
-    private int personID = 0;
-    private final String firstName;
-    private final String secondName;
+
+    private String firstName;
+    private String secondName;
     private final Calendar birthDay;
     public boolean isFemale;
 
@@ -16,7 +16,6 @@ public class Person {
         this.secondName = secondName;
         this.birthDay = birthDay;
         this.isFemale = isFemale;
-        personID = personID++;
     }
 
     public String getFirstName() {
@@ -25,6 +24,18 @@ public class Person {
 
     public String getSecondName() {
         return secondName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public void setFemale(boolean female) {
+        isFemale = female;
     }
 
     //--- Приводим тип Calendar к String ------------
@@ -53,7 +64,6 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                "personID=" + personID +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
                 ", birthDay=" + birthDay +

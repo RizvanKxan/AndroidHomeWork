@@ -1,6 +1,7 @@
 package com.example.listofemployees;
 
 
+import static com.example.listofemployees.MainActivity.curItem;
 import static com.example.listofemployees.MainActivity.firstNameEditingPerson;
 import static com.example.listofemployees.MainActivity.isEditingDialog;
 import static com.example.listofemployees.MainActivity.isFemaleEditingPerson;
@@ -58,7 +59,7 @@ public class CustomDialogFragment extends DialogFragment {
             ((TextView) dialogView.findViewById(R.id.tv_date_of_birt)).setVisibility(View.GONE);
 
             //--- выходим из режима редактирования
-            isEditingDialog = false;
+            //isEditingDialog = false;
         }
 
         return builder
@@ -93,7 +94,13 @@ public class CustomDialogFragment extends DialogFragment {
                                     .create()
                                     .show();
                         } else {
-                            action.addPerson(firstName, secondName, isFemale, dateOfBirth);
+                            if(isEditingDialog) {
+                                //--- выходим из режима редактирования
+                                isEditingDialog = false;
+                                action.editPerson(firstName, secondName, isFemale);
+                            } else {
+                                action.addPerson(firstName, secondName, isFemale, dateOfBirth);
+                            }
                         }
 
                         dialog.cancel();

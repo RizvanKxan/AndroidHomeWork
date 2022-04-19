@@ -123,13 +123,13 @@ public class MainActivity extends AppCompatActivity implements IAction {
                 //--- Снимаем выделение с предыдущего выделенного ------------
                 //--- элемента ------------------------------------
                 if (curItem != -1) {
-                    MainActivity.this.curView.setBackgroundColor(MainActivity.this.normalColor);
+                    curView.setBackgroundColor(normalColor);
                 }
                 //--- Устанавливаем выделение на текущий элемент ------------
                 //--- списка --------------------------------------
                 curItem = position;
-                MainActivity.this.curView = view;
-                MainActivity.this.curView.setBackgroundColor(MainActivity.this.selectedColor);
+                curView = view;
+                curView.setBackgroundColor(selectedColor);
                 adapter.notifyDataSetChanged(); //--- если не использовать, то возникают проблемы
                 //--- и предыдущее выделение не всегда стирается
             }
@@ -145,9 +145,22 @@ public class MainActivity extends AppCompatActivity implements IAction {
 
     @Override
     public void addPerson(String firstName, String secondName, boolean isFemale, Calendar dateOfBirth) {
-        personList.add(new Person(firstName, secondName, dateOfBirth, isFemale));
+        Person person = new Person(firstName,secondName,dateOfBirth,isFemale);
+        adapter.add(person);
         adapter.notifyDataSetChanged(); //<--- без этого ListView не синхронизирует отоображение ------------
         ///--- и даже можно будет словить exception ------------
+    }
+
+    @Override
+    public void editPerson(String firstName, String secondName, boolean isFemale) {
+        Person person;
+        if(curItem != -1) {
+            person = adapter.getItem(curItem);
+            person.setFirstName(firstName);
+            person.setSecondName(secondName);
+            person.setFemale(isFemale);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void showDialog(MenuItem item) {
@@ -194,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
                     secondNameEditingPerson = person.getSecondName();
                     isFemaleEditingPerson = person.isFemale;
                     showDialog(item);
+
 
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);

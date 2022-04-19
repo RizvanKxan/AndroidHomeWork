@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity implements IAction {
     public static Bitmap maleBitmap;
     ListView listView;
     //--- Цвет фона не выбранного элемента списка ------------
-    private final int normalColor = Color.WHITE;
+    public static final int normalColor = Color.WHITE;
     //--- Цвет фона выбранного элемента списка ------------
-    private final int selectedColor = Color.YELLOW;
+    public static final int selectedColor = Color.YELLOW;
     //--- Индекс выбранного элемента списка ------------
-    private static int curItem = -1;
+    public static int curItem = -1;
     //--- Ссылка на виджет текущего выбранного элемента списка ------------
-    private View curView = null;
+    public static View curView = null;
     //--- Название файла в котором будем хранить сотрудников
     public static final String FILE_NAME = "person.json";
     //--- Переменные для хранения информации о выделенном сотруднике, использую
@@ -207,46 +207,5 @@ public class MainActivity extends AppCompatActivity implements IAction {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private final class PersonAdapter extends ArrayAdapter<Person> {
-
-        public PersonAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<Person> objects) {
-            super(context, resource, textViewResourceId, objects);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
-
-            Person person = getItem(position);
-            TextView tvName = view.findViewById(R.id.tv_name);
-            TextView tvSecondName = view.findViewById(R.id.tv_second_name);
-            TextView tvDateOfBirt = view.findViewById(R.id.tv_date_of_birt);
-            ImageView genderImage = view.findViewById(R.id.image_gender);
-
-            tvName.setText(person.getFirstName());
-            tvSecondName.setText(person.getSecondName());
-            tvDateOfBirt.setText(person.getBirthDayString());
-
-            //--- Устанавливаем картинку в зависимости от пола человека ------------
-            if (person.isFemale) {
-                genderImage.setImageBitmap(femaleBitmap);
-            } else {
-                genderImage.setImageBitmap(maleBitmap);
-            }
-
-            //--- Подсветка отмеченного элемента списка ------------
-            //--- исключаем одновременную подсветку нескольких одинаковых элементов ------------
-            if (position == curItem) {
-                view.setBackgroundColor(MainActivity.this.selectedColor);
-                MainActivity.this.curView = view;
-            } else {
-                view.setBackgroundColor(MainActivity.this.normalColor);
-            }
-
-            return view;
-        }
     }
 }

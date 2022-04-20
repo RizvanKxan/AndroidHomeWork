@@ -1,7 +1,8 @@
 package com.example.listofemployees;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -9,26 +10,24 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements IAction {
 
@@ -56,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements IAction {
 
     //--- Записываем список с сотрудниками в файл в виде json.
     public void savePersonsToFile(MainActivity view) {
-        boolean result = JSONHelper.exportToJSON(this, personList);
-        if (result) {
+       // boolean result = JSONHelper.exportToJSON(this, personList);
+        boolean result2 = exportToJSON2();
+        if (result2) {
             Toast.makeText(this, "Данные сохранены.", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Не удалось сохранить данные.", Toast.LENGTH_LONG).show();
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
     //--- Считываем объекты из файла и записываем в наш список
     public void getPersonsFromFile(MainActivity view) {
         try {
-            personList = JSONHelper.importFromJSON(this);
+            personList = importFromJSON2();
             if (personList != null) {
                 Toast.makeText(this, "Данные восстановлены", Toast.LENGTH_LONG).show();
             } else {
@@ -78,19 +78,27 @@ public class MainActivity extends AppCompatActivity implements IAction {
 
     }
 
+    private static final String[] PERMISSIONS = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        //--- Проверяем есть ли файл с нашим именем и если нет, то создаём его
-        FileOutputStream fos = null;
-        try {
-            fos = openFileOutput(FILE_NAME, MODE_APPEND);
-            Toast.makeText(this, "Файл создан.", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
+        int permissionStatus = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
+        }
+
+        //--- Если файла не существует, то создаём его ------------
+        if(!getExternalPath().exists()) {
+            savePersonsToFile(this);
         }
 
         getPersonsFromFile(this);
@@ -140,6 +148,12 @@ public class MainActivity extends AppCompatActivity implements IAction {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        savePersonsToFile(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         savePersonsToFile(this);
     }
 
@@ -221,5 +235,40 @@ public class MainActivity extends AppCompatActivity implements IAction {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public File getExternalPath() {
+        return new File(getExternalFilesDir(null), FILE_NAME);
+    }
+
+    boolean exportToJSON2() {
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(personList);
+
+        try(FileOutputStream fileOutputStream =
+                    new FileOutputStream(getExternalPath())) {
+            fileOutputStream.write(jsonString.getBytes());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    ArrayList<Person> importFromJSON2() {
+        File file = getExternalPath();
+        if(file.exists()) {
+            try (FileInputStream fileInputStream = new FileInputStream(file);
+                 InputStreamReader streamReader = new InputStreamReader(fileInputStream)) {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<ArrayList<Person>>(){}.getType();
+                ArrayList<Person> dataItems = gson.fromJson(streamReader, listType);
+                return dataItems;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return null;
     }
 }

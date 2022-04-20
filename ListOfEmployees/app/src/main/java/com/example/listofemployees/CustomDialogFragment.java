@@ -1,7 +1,6 @@
 package com.example.listofemployees;
 
 
-import static com.example.listofemployees.MainActivity.curItem;
 import static com.example.listofemployees.MainActivity.firstNameEditingPerson;
 import static com.example.listofemployees.MainActivity.isEditingDialog;
 import static com.example.listofemployees.MainActivity.isFemaleEditingPerson;
@@ -10,7 +9,6 @@ import static com.example.listofemployees.MainActivity.secondNameEditingPerson;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +16,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -57,9 +53,6 @@ public class CustomDialogFragment extends DialogFragment {
             }
             ((DatePicker) dialogView.findViewById(R.id.pickedDate)).setVisibility(View.GONE);
             ((TextView) dialogView.findViewById(R.id.tv_date_of_birt)).setVisibility(View.GONE);
-
-            //--- выходим из режима редактирования
-            //isEditingDialog = false;
         }
 
         return builder
@@ -75,11 +68,7 @@ public class CustomDialogFragment extends DialogFragment {
 
                         RadioButton femaleRadioButton = dialogView.findViewById(R.id.isFemale);
                         boolean isFemale;
-                        if (femaleRadioButton.isChecked()) {
-                            isFemale = true;
-                        } else {
-                            isFemale = false;
-                        }
+                        isFemale = femaleRadioButton.isChecked();
 
                         DatePicker datePicker = dialogView.findViewById(R.id.pickedDate);
                         Calendar dateOfBirth = Calendar.getInstance();

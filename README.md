@@ -1,5 +1,5 @@
-# AndroidHomeWork
-Домашние задания по Android.
+# Android_Training
+Осваиваем Android.
 
 1. ListOfEmployees
 https://github.com/RizvanKxan/AndroidHomeWork/tree/main/ListOfEmployees

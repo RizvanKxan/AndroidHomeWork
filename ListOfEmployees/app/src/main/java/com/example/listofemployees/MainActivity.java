@@ -3,7 +3,6 @@ package com.example.listofemployees;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,17 +28,11 @@ public class MainActivity extends AppCompatActivity implements IAction {
 
     private ArrayList<Person> personList = new ArrayList<>();
     private PersonAdapter adapter;
-    public static Bitmap femaleBitmap;
-    public static Bitmap maleBitmap;
     ListView listView;
-    //--- Цвет фона не выбранного элемента списка ------------
-    public static final int normalColor = Color.WHITE;
-    //--- Цвет фона выбранного элемента списка ------------
-    public static final int selectedColor = Color.YELLOW;
     //--- Индекс выбранного элемента списка ------------
     public static int curItem = -1;
     //--- Название файла в котором будем хранить сотрудников
-    public static final String FILE_NAME = "person.json";
+    private static final String FILE_NAME = "person.json";
     //--- Переменные для хранения информации о выделенном сотруднике, использую
     //--- для того чтобы в диалоге подтянуть информацию о сотруднике
     public static boolean isEditingDialog = false;
@@ -91,33 +84,15 @@ public class MainActivity extends AppCompatActivity implements IAction {
         );
         listView.setAdapter(adapter);
 
-        //--- Устанавливаем изоображения для наших Bitmap из Assets ------------
-        try {
-            InputStream inputStream = getAssets().open("man.png");
-            InputStream inputStream2 = getAssets().open("woman.png");
-            femaleBitmap = BitmapFactory.decodeStream(inputStream2);
-            maleBitmap = BitmapFactory.decodeStream(inputStream);
-            inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         //--- Назначение обработчика события клика по элементу списка ------------
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent,
                                     View view, int position, long id) {
-                //--- Снимаем выделение с предыдущего выделенного ------------
-                //--- элемента ------------------------------------
-                if (curItem != -1) {
-                    view.setBackgroundColor(normalColor);
-                }
-                //--- Устанавливаем выделение на текущий элемент ------------
-                //--- списка --------------------------------------
+                //--- Устанавливаем выделение на текущий элемент списка ------------
                 curItem = position;
-                view.setBackgroundColor(selectedColor);
                 adapter.notifyDataSetChanged(); //--- если не использовать, то возникают проблемы
-                //--- и предыдущее выделение не всегда стирается
+                //--- и предыдущее выделение не всегда стирается ------------
             }
         });
     }
@@ -240,7 +215,8 @@ public class MainActivity extends AppCompatActivity implements IAction {
                  InputStreamReader streamReader = new InputStreamReader(fileInputStream)) {
                 Gson gson = new Gson();
                 Type listType = new TypeToken<ArrayList<Person>>(){}.getType();
-                ArrayList<Person> dataItems = gson.fromJson(streamReader, listType);
+                ArrayList<Person> dataItems;
+                dataItems = gson.fromJson(streamReader, listType);
                 return dataItems;
             } catch (IOException ex) {
                 ex.printStackTrace();

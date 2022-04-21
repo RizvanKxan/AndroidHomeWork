@@ -5,7 +5,6 @@ import static com.example.listofemployees.MainActivity.femaleBitmap;
 import static com.example.listofemployees.MainActivity.maleBitmap;
 import static com.example.listofemployees.MainActivity.normalColor;
 import static com.example.listofemployees.MainActivity.selectedColor;
-import static com.example.listofemployees.MainActivity.curView;
 
 import android.content.Context;
 import android.view.View;
@@ -51,7 +50,6 @@ public class PersonAdapter extends ArrayAdapter<Person> {
         //--- исключаем одновременную подсветку нескольких одинаковых элементов ------------
         if (position == curItem) {
             view.setBackgroundColor(selectedColor);
-            curView = view;
         } else {
             view.setBackgroundColor(normalColor);
         }

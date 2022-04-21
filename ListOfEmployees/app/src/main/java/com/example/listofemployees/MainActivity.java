@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
     public static final int selectedColor = Color.YELLOW;
     //--- Индекс выбранного элемента списка ------------
     public static int curItem = -1;
-    //--- Ссылка на виджет текущего выбранного элемента списка ------------
-    public static View curView = null;
     //--- Название файла в котором будем хранить сотрудников
     public static final String FILE_NAME = "person.json";
     //--- Переменные для хранения информации о выделенном сотруднике, использую
@@ -112,18 +110,16 @@ public class MainActivity extends AppCompatActivity implements IAction {
                 //--- Снимаем выделение с предыдущего выделенного ------------
                 //--- элемента ------------------------------------
                 if (curItem != -1) {
-                    curView.setBackgroundColor(normalColor);
+                    view.setBackgroundColor(normalColor);
                 }
                 //--- Устанавливаем выделение на текущий элемент ------------
                 //--- списка --------------------------------------
                 curItem = position;
-                curView = view;
-                curView.setBackgroundColor(selectedColor);
+                view.setBackgroundColor(selectedColor);
                 adapter.notifyDataSetChanged(); //--- если не использовать, то возникают проблемы
                 //--- и предыдущее выделение не всегда стирается
             }
         });
-
     }
 
     @Override

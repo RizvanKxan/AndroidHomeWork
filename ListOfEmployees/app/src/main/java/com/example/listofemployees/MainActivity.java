@@ -1,8 +1,6 @@
 package com.example.listofemployees;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -15,8 +13,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
@@ -55,9 +51,8 @@ public class MainActivity extends AppCompatActivity implements IAction {
 
     //--- Записываем список с сотрудниками в файл в виде json.
     public void savePersonsToFile(MainActivity view) {
-       // boolean result = JSONHelper.exportToJSON(this, personList);
-        boolean result2 = exportToJSON2();
-        if (result2) {
+        boolean result = exportToJSON();
+        if (result) {
             Toast.makeText(this, "Данные сохранены.", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Не удалось сохранить данные.", Toast.LENGTH_LONG).show();
@@ -67,34 +62,20 @@ public class MainActivity extends AppCompatActivity implements IAction {
     //--- Считываем объекты из файла и записываем в наш список
     public void getPersonsFromFile(MainActivity view) {
         try {
-            personList = importFromJSON2();
+            personList = importFromJSON();
             if (personList != null) {
                 Toast.makeText(this, "Данные восстановлены", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Не удалось открыть данные", Toast.LENGTH_LONG).show();
             }
-        } catch (Exception exception) {
-        }
+        } catch (Exception ignored) { }
 
     }
-
-    private static final String[] PERMISSIONS = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        int permissionStatus = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
-        } else {
-            ActivityCompat.requestPermissions(this, PERMISSIONS, 1);
-        }
 
         //--- Если файла не существует, то создаём его ------------
         if(!getExternalPath().exists()) {
@@ -241,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
         return new File(getExternalFilesDir(null), FILE_NAME);
     }
 
-    boolean exportToJSON2() {
+    boolean exportToJSON() {
         Gson gson = new Gson();
         String jsonString = gson.toJson(personList);
 
@@ -256,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
         return false;
     }
 
-    ArrayList<Person> importFromJSON2() {
+    ArrayList<Person> importFromJSON() {
         File file = getExternalPath();
         if(file.exists()) {
             try (FileInputStream fileInputStream = new FileInputStream(file);

@@ -9,5 +9,5 @@ https://github.com/RizvanKxan/AndroidHomeWork/tree/main/ListOfEmployees
 
 Демо приложения:
 
-![image](https://github.com/RizvanKxan/AndroidHomeWork/blob/main/ListOfEmployees/demo.gif)
+<img src="https://github.com/RizvanKxan/AndroidHomeWork/blob/main/ListOfEmployees/demo.gif" alt="ListOfEmployees demo" width="300"/>
 

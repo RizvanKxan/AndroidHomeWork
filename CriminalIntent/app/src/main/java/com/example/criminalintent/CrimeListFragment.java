@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,10 +42,27 @@ public class CrimeListFragment extends Fragment {
         mCrimeRecyclerView.setAdapter(mAdapter);
     }
 
-    // ViewHolder который будет заполнять наш макет.
+    // ViewHolder который будет заполнять наш макет. Весь код, выполняющий работу по
+    // связыванию, располагается здесь.
     private class CrimeHolder extends RecyclerView.ViewHolder {
+
+        private TextView mTitleTextView;
+        private TextView mDateTextView;
+        private Crime mCrime;
+
         public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
+
+            mTitleTextView = (TextView) itemView.findViewById(R.id.crime_title);
+            mDateTextView = (TextView) itemView.findViewById(R.id.crime_date);
+        }
+
+        // Метод будет вызываться каждый раз, когда RecyclerView потребует связать
+        // данный объект CrimeHolder с объектом конкретного преступления.
+        public void bind(Crime crime) {
+            mCrime = crime;
+            mTitleTextView.setText(mCrime.getTitle());
+            mDateTextView.setText(mCrime.getDate().toString());
         }
     }
 
@@ -66,9 +84,13 @@ public class CrimeListFragment extends Fragment {
             return new CrimeHolder(layoutInflater, parent);
         }
 
+        // Чем проще реализация - тем плавнее пракрутка RecyclerView. Если связывание
+        // сделать менее эфективным и громоздким, тем выше вероятность запинок и рывков
+        // при прокрутке.
         @Override
         public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
-
+            Crime crime = mCrimes.get(position);
+            holder.bind(crime);
         }
 
         @Override

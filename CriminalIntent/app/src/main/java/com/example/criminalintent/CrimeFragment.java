@@ -14,15 +14,17 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
+    public static final String DIALOG_DATE = "DialogDate";
 
     private Crime mCrime;
     private EditText mTitleField;
-    private Button mButton;
+    private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
     public static CrimeFragment newInstance(UUID crimeID) {
@@ -67,10 +69,18 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mButton = (Button) view.findViewById(R.id.crime_date);
-        mButton.setText(mCrime.getDate().toString());
-        mButton.setEnabled(false);
+        mDateButton = (Button) view.findViewById(R.id.crime_date);
+        mDateButton.setText(mCrime.getDate().toString());
 
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment
+                        .newInstance(mCrime.getDate());
+                dialog.show(manager, DIALOG_DATE);
+            }
+        });
         mSolvedCheckBox = (CheckBox) view.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

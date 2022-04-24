@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +27,19 @@ public class CrimeListFragment extends Fragment {
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    // В данной переменной храним значение виден ли подзаголовок
+    // с количеством преступлений.
+    private boolean mSubtitleVisible;
+
+    // Ключ для сохранения видимости подзаголовка при повороте.
+    public static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Сообщаем FragmentManger-у, что экземпляр CrimeListFragment должен получать обратные
-        //вызовы меню.
+        //вызовы меню, или проще говоря обрабатывать клики по меню.
         setHasOptionsMenu(true);
     }
 
@@ -40,12 +48,24 @@ public class CrimeListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_crime_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // Получаем видимость подзаголовка
+        if (savedInstanceState != null) {
+            mSubtitleVisible = savedInstanceState
+                    .getBoolean(SAVED_SUBTITLE_VISIBLE);
+        }
 
         updateUI();
         return view;
+    }
+
+    // Сохраняем состояние видимости подзаголовка
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
     }
 
     // Создаём банк преступлений. Получаем из него все преступления и передаём
@@ -53,12 +73,13 @@ public class CrimeListFragment extends Fragment {
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
-        if(mAdapter == null) {
+        if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
         }
+        updateSubtitle();
     }
 
     // Добавляем командное меню к фрагменту.
@@ -66,9 +87,17 @@ public class CrimeListFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime_list, menu);
+
+        // Меняем название пункта меню, в зависимости от того показан ли уже подзаголовок.
+        MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
+        if (mSubtitleVisible) {
+            subtitleItem.setTitle(R.string.hide_subtitle);
+        } else {
+            subtitleItem.setTitle(R.string.show_subtitle);
+        }
     }
 
-    // Обрабатываем клик по меню добавления нового преступления
+    // Обрабатываем клики по меню
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -79,9 +108,28 @@ public class CrimeListFragment extends Fragment {
                         .newIntent(getActivity(), crime.getId());
                 startActivity(intent);
                 return true;
+            case R.id.show_subtitle:
+                mSubtitleVisible = !mSubtitleVisible;
+                getActivity().invalidateOptionsMenu(); // говорим что надо перерисовать меню
+                updateSubtitle();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // Метод будет обновлять подзаголовок с количеством преступлений на панели инструментов.
+    private void updateSubtitle() {
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        int crimeCount = crimeLab.getCrimes().size();
+        String subTitle = getString(R.string.subtitle_format, crimeCount);
+
+        if (!mSubtitleVisible) {
+            subTitle = null;
+        }
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.getSupportActionBar().setSubtitle(subTitle);
     }
 
     @Override

@@ -3,8 +3,7 @@
     <item
         android:id="@+id/add_person"
         android:orderInCategory="1"
-        android:title="@string/menuItemAdd"
-        android:onClick="showDialog"/>
+        android:title="@string/menuItemAdd"/>
     <item
         android:id="@+id/remove_person"
         android:orderInCategory="2"

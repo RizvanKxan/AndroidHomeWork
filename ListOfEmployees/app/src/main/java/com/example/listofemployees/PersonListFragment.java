@@ -1,7 +1,10 @@
 package com.example.listofemployees;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,7 +22,7 @@ import java.util.UUID;
 public class PersonListFragment extends Fragment {
     private RecyclerView mPersonRecyclerView;
     private PersonAdapter mAdapter;
-
+    private int mSelectedPosition = -1;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,15 +49,23 @@ public class PersonListFragment extends Fragment {
         } else {
             mAdapter.notifyDataSetChanged();
         }
+    }
 
+    // Добавляем командное меню к фрагменту.
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_person_list, menu);
     }
 
     private class PersonHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         private ImageView mGenderImageView;
         private TextView mFirstNameTextView;
         private TextView mSecondNameTextView;
         private TextView mDateTextView;
         private Person mPerson;
+
 
         public PersonHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_person, parent, false));
@@ -77,12 +88,15 @@ public class PersonListFragment extends Fragment {
             } else {
                 mGenderImageView.setImageResource(R.drawable.man);
             }
-        }
+       }
 
         @Override
         public void onClick(View view) {
             // действие по клику
             UUID personID = mPerson.getId();
+            mSelectedPosition = getAdapterPosition();
+            mAdapter.notifyDataSetChanged();
+
         }
     }
 
@@ -102,6 +116,12 @@ public class PersonListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull PersonHolder holder, int position) {
+            if (mSelectedPosition == position) {
+                holder.itemView.setBackgroundColor(Color.YELLOW);
+            } else {
+                holder.itemView.setBackgroundColor(Color.WHITE);
+            }
+
             Person person = mPersons.get(position);
             holder.bind(person);
         }
@@ -111,6 +131,4 @@ public class PersonListFragment extends Fragment {
             return mPersons.size();
         }
     }
-
-
 }

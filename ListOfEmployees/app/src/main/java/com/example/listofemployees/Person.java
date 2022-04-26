@@ -3,19 +3,24 @@ package com.example.listofemployees;
 import androidx.annotation.NonNull;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 public class Person {
-
+    private final UUID id;
     private String firstName;
     private String secondName;
     private final Calendar birthDay;
     public boolean isFemale;
-
     public Person(String firstName, String secondName, Calendar birthDay, boolean isFemale) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.birthDay = birthDay;
         this.isFemale = isFemale;
+        id = UUID.randomUUID();
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getFirstName() {

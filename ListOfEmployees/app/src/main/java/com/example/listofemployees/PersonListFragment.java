@@ -1,10 +1,12 @@
 package com.example.listofemployees;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,16 +15,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-public class PersonListFragment extends Fragment {
+public class PersonListFragment extends Fragment{
     private RecyclerView mPersonRecyclerView;
     private PersonAdapter mAdapter;
     private int mSelectedPosition = -1;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +61,28 @@ public class PersonListFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_person_list, menu);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean isEditingMode;
+        FragmentManager manager = getFragmentManager();
+        AddPersonsFragment dialog;
+        switch (item.getItemId()) {
+            case R.id.add_person:
+                isEditingMode = false;
+                dialog =  AddPersonsFragment.newInstance(isEditingMode);
+                dialog.show(manager, "string");
+                return true;
+            case R.id.edit_person:
+                isEditingMode = true;
+                dialog = AddPersonsFragment.newInstance(isEditingMode);
+                dialog.show(manager, "string");
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class PersonHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

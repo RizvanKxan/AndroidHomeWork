@@ -29,4 +29,8 @@ public class PersonBank {
     public List<Person> getPersons() {
         return mPersonList;
     }
+
+    public void addPerson(Person person) {
+        mPersonList.add(person);
+    }
 }

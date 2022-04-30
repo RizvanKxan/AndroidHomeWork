@@ -80,6 +80,8 @@ public class PersonListFragment extends Fragment{
                 dialog = AddPersonsFragment.newInstance(isEditingMode);
                 dialog.show(manager, "string");
                 return true;
+            case R.id.remove_person:
+
 
         }
         return super.onOptionsItemSelected(item);

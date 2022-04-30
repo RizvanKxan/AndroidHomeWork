@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
     private static final String FILE_NAME = "person.json";
     //--- Переменные для хранения информации о выделенном сотруднике, использую
     //--- для того чтобы в диалоге подтянуть информацию о сотруднике
-    public static boolean isEditingDialog = false;
     public static String firstNameEditingPerson = "";
     public static String secondNameEditingPerson = "";
     public static boolean isFemaleEditingPerson = false;
@@ -126,18 +125,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
         }
     }
 
-    public void showDialog(MenuItem item) {
-        CustomDialogFragment dialog = new CustomDialogFragment();
-        dialog.show(getSupportFragmentManager(), "custom");
-    }
-
-    //--- Добавляем меню ------------
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.fragment_person_list, menu);
-        return true;
-    }
-
     //--- Обрабатываем клики по Меню ------------
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -145,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements IAction {
         int id = item.getItemId();
         switch (id) {
             case R.id.add_person:
-                showDialog(item);
+                //showDialog();
                 return true;
             case R.id.remove_person:
                 if (!adapter.isEmpty() && curItem != -1) {
@@ -164,12 +151,12 @@ public class MainActivity extends AppCompatActivity implements IAction {
             case R.id.edit_person:
 
                 if (!adapter.isEmpty() && curItem != -1) {
-                    isEditingDialog = true;
+                   // isEditingDialog = true;
                     Person person = adapter.getItem(curItem);
                     firstNameEditingPerson = person.getFirstName();
                     secondNameEditingPerson = person.getSecondName();
                     isFemaleEditingPerson = person.isFemale;
-                    showDialog(item);
+                    //showDialog(item);
 
 
                 } else {

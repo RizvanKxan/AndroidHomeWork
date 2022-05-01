@@ -3,6 +3,7 @@ package com.example.listofemployees;
 import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 public class PersonListActivity extends SingleFragmentActivity implements IAction{
     @Override
@@ -17,7 +18,7 @@ public class PersonListActivity extends SingleFragmentActivity implements IActio
     }
 
     @Override
-    public void editPerson(String firstName, String secondName, boolean isFemale) {
-
+    public void editPerson(String firstName, String secondName, boolean isFemale, UUID mSelectedPersonUUID) {
+        PersonBank.get(this).editPerson(mSelectedPersonUUID, firstName,secondName, isFemale);
     }
 }

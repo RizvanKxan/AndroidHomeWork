@@ -1,6 +1,8 @@
 package com.example.listofemployees;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,14 +21,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-public class PersonListFragment extends Fragment{
+public class PersonListFragment extends Fragment {
     private RecyclerView mPersonRecyclerView;
     private PersonAdapter mAdapter;
     private int mSelectedPosition = -1;
+    private UUID mSelectedPersonUUID;
+    // Request код для получения результата от AddPersonsFragment-а.
+    private static final int REQUEST_DATE = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +47,23 @@ public class PersonListFragment extends Fragment{
 
         updateUI();
         return view;
+    }
+
+    //--- Как только получили ответ от фрагмента редактирования, обновляем UI.
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_DATE) {
+            updateUI();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
     }
 
     private void updateUI() {
@@ -72,17 +93,25 @@ public class PersonListFragment extends Fragment{
         switch (item.getItemId()) {
             case R.id.add_person:
                 isEditingMode = false;
-                dialog =  AddPersonsFragment.newInstance(isEditingMode);
+                dialog = AddPersonsFragment.newInstance(isEditingMode, mSelectedPersonUUID);
                 dialog.show(manager, "string");
                 return true;
             case R.id.edit_person:
-                isEditingMode = true;
-                dialog = AddPersonsFragment.newInstance(isEditingMode);
-                dialog.show(manager, "string");
+                if (mSelectedPosition != -1) {
+                    isEditingMode = true;
+                    dialog = AddPersonsFragment.newInstance(isEditingMode, mSelectedPersonUUID);
+                    dialog.setTargetFragment(PersonListFragment.this, REQUEST_DATE);
+                    dialog.show(manager, "string");
+                }
                 return true;
             case R.id.remove_person:
-
-
+                if (mSelectedPosition != -1 && mAdapter != null) {
+                    Person person = mAdapter.mPersons.get(mSelectedPosition);
+                    mAdapter.mPersons.remove(person);
+                    mSelectedPosition--;
+                    updateUI();
+                }
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -117,16 +146,16 @@ public class PersonListFragment extends Fragment{
             } else {
                 mGenderImageView.setImageResource(R.drawable.man);
             }
-       }
+        }
 
         @Override
         public void onClick(View view) {
             // действие по клику
-            UUID personID = mPerson.getId();
+            mSelectedPersonUUID = mPerson.getId();
             mSelectedPosition = getAdapterPosition();
             mAdapter.notifyDataSetChanged();
-
         }
+
     }
 
     private class PersonAdapter extends RecyclerView.Adapter<PersonHolder> {

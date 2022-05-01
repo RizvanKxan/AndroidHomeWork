@@ -2,7 +2,6 @@ package com.example.listofemployees;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,12 +18,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity implements IAction {
+public class MainActivity extends AppCompatActivity{
 
     private ArrayList<Person> personList = new ArrayList<>();
-    private PersonAdapter adapter;
     ListView listView;
     //--- Индекс выбранного элемента списка ------------
     public static int curItem = -1;
@@ -72,13 +70,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
         getPersonsFromFile(this);
 
         listView = findViewById(R.id.list_view);
-        adapter = new PersonAdapter(
-                this,
-                R.layout.item_person,
-                R.id.tv_name,
-                personList
-        );
-        listView.setAdapter(adapter);
 
         //--- Назначение обработчика события клика по элементу списка ------------
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -87,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
                                     View view, int position, long id) {
                 //--- Устанавливаем выделение на текущий элемент списка ------------
                 curItem = position;
-                adapter.notifyDataSetChanged(); //--- если не использовать, то возникают проблемы
                 //--- и предыдущее выделение не всегда стирается ------------
             }
         });
@@ -103,74 +93,6 @@ public class MainActivity extends AppCompatActivity implements IAction {
     protected void onStop() {
         super.onStop();
         savePersonsToFile(this);
-    }
-
-    @Override
-    public void addPerson(String firstName, String secondName, boolean isFemale, Calendar dateOfBirth) {
-        Person person = new Person(firstName,secondName,dateOfBirth,isFemale);
-        adapter.add(person);
-        adapter.notifyDataSetChanged(); //<--- без этого ListView не синхронизирует отоображение ------------
-        ///--- и даже можно будет словить exception ------------
-    }
-
-    @Override
-    public void editPerson(String firstName, String secondName, boolean isFemale) {
-        Person person;
-        if(curItem != -1) {
-            person = adapter.getItem(curItem);
-            person.setFirstName(firstName);
-            person.setSecondName(secondName);
-            person.setFemale(isFemale);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    //--- Обрабатываем клики по Меню ------------
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.add_person:
-                //showDialog();
-                return true;
-            case R.id.remove_person:
-                if (!adapter.isEmpty() && curItem != -1) {
-                    Person person = adapter.getItem(curItem);
-                    adapter.remove(person);
-                    curItem = curItem - 1;
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("Внимание!")
-                            .setMessage("Список пуст или ничего не выбрано!")
-                            .setPositiveButton("OK", null)
-                            .create()
-                            .show();
-                }
-                return true;
-            case R.id.edit_person:
-
-                if (!adapter.isEmpty() && curItem != -1) {
-                   // isEditingDialog = true;
-                    Person person = adapter.getItem(curItem);
-                    firstNameEditingPerson = person.getFirstName();
-                    secondNameEditingPerson = person.getSecondName();
-                    isFemaleEditingPerson = person.isFemale;
-                    //showDialog(item);
-
-
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("Внимание!")
-                            .setMessage("Список пуст или ничего не выбрано!")
-                            .setPositiveButton("OK", null)
-                            .create()
-                            .show();
-                }
-
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public File getExternalPath() {

@@ -95,6 +95,7 @@ public class PersonListFragment extends Fragment {
             case R.id.add_person:
                 isEditingMode = false;
                 dialog = AddPersonsFragment.newInstance(isEditingMode, mSelectedPersonUUID);
+                dialog.setTargetFragment(PersonListFragment.this, REQUEST_DATE);
                 dialog.show(manager, "string");
                 return true;
             case R.id.edit_person:

@@ -113,10 +113,10 @@ public class AddPersonsFragment extends DialogFragment {
                         } else {
                             if (mModeDialog) {
                                 action.editPerson(firstName, secondName, isFemale, mPerson.getId());
-                                sendResult(Activity.RESULT_OK);
                             } else {
                                 action.addPerson(firstName, secondName, isFemale, dateOfBirth);
                             }
+                            sendResult(Activity.RESULT_OK);
                         }
 
                         dialog.cancel();

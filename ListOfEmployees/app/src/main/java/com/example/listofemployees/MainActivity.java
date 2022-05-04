@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
         //--- Если файла не существует, то создаём его ------------
         if(!getExternalPath().exists()) {
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity{
 
         getPersonsFromFile(this);
 
-        listView = findViewById(R.id.list_view);
+        //listView = findViewById(R.id.list_view);
 
         //--- Назначение обработчика события клика по элементу списка ------------
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -73,6 +73,7 @@ public class PersonListFragment extends Fragment {
             mAdapter = new PersonAdapter(personList);
             mPersonRecyclerView.setAdapter(mAdapter);
         } else {
+            mAdapter.setPersons(personList);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -187,6 +188,10 @@ public class PersonListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mPersons.size();
+        }
+
+        public void setPersons(List<Person> persons) {
+            mPersons = persons;
         }
     }
 }

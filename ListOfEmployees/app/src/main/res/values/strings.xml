@@ -1,9 +1,15 @@
 <resources>
-    <string name="app_name">ListOfEmployees</string>
+    <string name="app_name">Список сотрудников</string>
     <string name="menuItemAdd">Добавить сотрудника</string>
     <string name="menuItemRemove">Удалить сотрудника</string>
     <string name="menuItemEdit">Изменить сотрудника</string>
-    <string name="mainTitle">Список сотрудников</string>
-    <string name="genderMan">Мужчина</string>
-    <string name="genderWoman">Женщина</string>
+    <string name="dialog_add_person_genderMan">Мужчина</string>
+    <string name="dialog_add_person_genderWoman">Женщина</string>
+    <string name="item_person_gender_image_description">Gender Image</string>
+    <string name="dialog_add_person_title">Добавить сотрудника</string>
+    <string name="dialog_add_person_second_name_tv">Фамилия</string>
+    <string name="dialog_add_person_second_name_et">Введите фамилию:</string>
+    <string name="dialog_add_person_first_name_tv">Имя</string>
+    <string name="dialog_add_person_first_name_et">Введите имя:</string>
+    <string name="dialog_add_person_gender_tv">Пол</string>
 </resources>

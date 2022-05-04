@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:paddingTop="10sp"
-            android:text="Добавить сотрудника"
+            android:text="@string/dialog_add_person_title"
             android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -29,9 +29,9 @@
             android:id="@+id/tv_second_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Фамилия"
-            android:textSize="20sp"
             android:gravity="center"
+            android:text="@string/dialog_add_person_second_name_tv"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/et_second_name"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintLeft_toRightOf="@id/et_second_name"
@@ -43,8 +43,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ems="8"
+            android:hint="@string/dialog_add_person_second_name_et"
             android:inputType="textPersonName|textCapWords"
-            android:hint="Введите фамилию:"
             app:layout_constraintBottom_toTopOf="@id/radioGroup"
             app:layout_constraintLeft_toLeftOf="@id/et_first_name"
             app:layout_constraintLeft_toRightOf="@id/tv_second_name"
@@ -56,7 +56,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Имя"
+            android:text="@string/dialog_add_person_first_name_tv"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/et_first_name"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -68,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="@string/dialog_add_person_first_name_et"
             android:inputType="textPersonName|textCapWords"
-            android:hint="Введите имя:"
             app:layout_constraintBottom_toTopOf="@id/radioGroup"
             app:layout_constraintLeft_toRightOf="@id/tv_first_name"
             app:layout_constraintRight_toRightOf="parent"
@@ -78,9 +78,9 @@
         <TextView
             android:id="@+id/tv_gender"
             android:layout_width="0dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:text="Пол"
+            android:gravity="center"
+            android:text="@string/dialog_add_person_gender_tv"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/radioGroup"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -104,13 +104,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/genderMan"
+                android:text="@string/dialog_add_person_genderMan"
                 tools:ignore="UsingOnClickInXml" />
 
             <ImageView
                 android:id="@+id/image_gender_dialog"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/man" />
 
@@ -118,7 +119,7 @@
                 android:id="@+id/isFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/genderWoman" />
+                android:text="@string/dialog_add_person_genderWoman" />
 
             <ImageView
                 android:id="@+id/image_gender_dialog"
@@ -148,11 +149,11 @@
             android:layout_gravity="center"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_date_of_birt"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radioGroup"
-            android:visibility="visible"/>
+            app:layout_constraintTop_toBottomOf="@id/radioGroup" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

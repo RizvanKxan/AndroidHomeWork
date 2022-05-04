@@ -10,7 +10,8 @@
     <ImageView
         android:id="@+id/image_gender"
         android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:contentDescription="@string/item_person_gender_image_description" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -24,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="22sp"
-            tools:text="20" />
+            tools:text="Second_Name" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -32,7 +33,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="20sp"
-            tools:text="Name" />
+            tools:text="First_Name" />
 
         <TextView
             android:id="@+id/tv_date_of_birt"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="24sp"
-            tools:text="20/20/1992" />
+            tools:text="Date" />
     </LinearLayout>
 
 

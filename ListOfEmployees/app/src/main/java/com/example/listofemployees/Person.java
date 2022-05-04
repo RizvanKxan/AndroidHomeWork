@@ -1,26 +1,36 @@
 package com.example.listofemployees;
 
-import androidx.annotation.NonNull;
-
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 public class Person {
-    private final UUID id;
+    private final UUID mId;
     private String firstName;
     private String secondName;
-    private final Calendar birthDay;
+    private Calendar birthDay;
     public boolean isFemale;
+
+    public Person() {
+        this(UUID.randomUUID());
+    }
+
+    public Person(UUID id) {
+        mId = id;
+        birthDay = Calendar.getInstance();
+    }
+
     public Person(String firstName, String secondName, Calendar birthDay, boolean isFemale) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.birthDay = birthDay;
         this.isFemale = isFemale;
-        id = UUID.randomUUID();
+        mId = UUID.randomUUID();
     }
 
     public UUID getId() {
-        return id;
+        return mId;
     }
 
     public String getFirstName() {
@@ -64,15 +74,13 @@ public class Person {
         return C;
     }
 
+    public void setDate(String strDate) {
+        try {
+            String pattern = "dd-MMM-yy";
+            Date date = new SimpleDateFormat(pattern).parse(strDate);
+            birthDay.setTime(date);
+        } catch (Exception exception) {
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Person{" +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", birthDay=" + birthDay +
-                ", isFemale=" + isFemale +
-                '}';
+        }
     }
 }

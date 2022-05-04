@@ -52,7 +52,9 @@ public class AddPersonsFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID mSelectedPersonUUID = (UUID) getArguments().getSerializable(ARG_PERSON_ID);
-        mPerson = PersonBank.get(getActivity()).getPerson(mSelectedPersonUUID);
+        if(mSelectedPersonUUID != null) {
+            mPerson = PersonBank.get(getActivity()).getPerson(mSelectedPersonUUID);
+        }
         initComponent();
     }
 

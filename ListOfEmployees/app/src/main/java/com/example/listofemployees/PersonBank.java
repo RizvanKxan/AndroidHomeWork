@@ -1,9 +1,13 @@
 package com.example.listofemployees;
 
+import android.content.ContentValues;
 import android.content.Context;
-import android.os.Build;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
-import androidx.annotation.RequiresApi;
+import com.example.listofemployees.database.PersonBaseHelper;
+import com.example.listofemployees.database.PersonCursorWrapper;
+import com.example.listofemployees.database.PersonDbScheme.PersonTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,7 @@ public class PersonBank {
     List<Person> mPersonList;
     private static PersonBank sPersonBank;
     private final Context mContext;
+    private SQLiteDatabase mDatabase;
 
     public static PersonBank get(Context context) {
         if (sPersonBank == null) {
@@ -23,37 +28,94 @@ public class PersonBank {
 
     private PersonBank(Context context) {
         mContext = context.getApplicationContext();
-        mPersonList = new ArrayList<>();
-        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
-        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), false));
-        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
-        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
+        mDatabase = new PersonBaseHelper(mContext)
+                .getWritableDatabase();
+//        mPersonList = new ArrayList<>();
+//        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
+//        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), false));
+//        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
+//        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
     }
 
     public List<Person> getPersons() {
-        return mPersonList;
+        List<Person> persons = new ArrayList<>();
+
+        PersonCursorWrapper cursor = queryPersons(null,null);
+
+        try {
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()) {
+                persons.add(cursor.getPerson());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return persons;
+    }
+
+    private PersonCursorWrapper queryPersons(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                PersonTable.NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+        return new PersonCursorWrapper(cursor);
     }
 
     public Person getPerson(UUID id) {
-        for (Person person : mPersonList) {
-            if (person.getId().equals(id)) {
-                return person;
+        PersonCursorWrapper cursor = queryPersons(
+                PersonTable.Cols.UUID + " = ?",
+                new String[] { id.toString()}
+        );
+
+        try {
+            if(cursor.getCount() == 0) {
+                return null;
             }
+
+            cursor.moveToFirst();
+            return cursor.getPerson();
+        } finally {
+            cursor.close();
         }
-        return null;
+    }
+
+    public void updatePerson(Person person) {
+        String uuidString = person.getId().toString();
+        ContentValues values = getContentValues(person);
+
+        mDatabase.update(PersonTable.NAME, values,
+                PersonTable.Cols.UUID + " = ?",
+                new String[] { uuidString});
+    }
+
+    public static ContentValues getContentValues(Person person) {
+        ContentValues values = new ContentValues();
+        values.put(PersonTable.Cols.UUID, person.getId().toString());
+        values.put(PersonTable.Cols.FIRST_NAME, person.getFirstName());
+        values.put(PersonTable.Cols.SECOND_NAME, person.getSecondName());
+        values.put(PersonTable.Cols.FEMALE, person.isFemale ? 1 : 0);
+        values.put(PersonTable.Cols.BIRTHDAY, person.getBirthDayString());
+        return values;
     }
 
     public void addPerson(Person person) {
-        mPersonList.add(person);
+        ContentValues values = getContentValues(person);
+
+        mDatabase.insert(PersonTable.NAME, null, values);
     }
 
     public void editPerson(UUID id, String firstName, String secondName, boolean isFemale) {
-        for (Person person : mPersonList) {
-            if (person.getId().equals(id)) {
-                person.setFirstName(firstName);
-                person.setSecondName(secondName);
-                person.setFemale(isFemale);
-            }
-        }
+        Person person = getPerson(id);
+        person.setFirstName(firstName);
+        person.setSecondName(secondName);
+        person.setFemale(isFemale);
+        updatePerson(person);
     }
 }

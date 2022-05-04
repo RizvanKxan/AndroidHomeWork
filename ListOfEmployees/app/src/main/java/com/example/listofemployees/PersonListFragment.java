@@ -108,9 +108,7 @@ public class PersonListFragment extends Fragment {
                 return true;
             case R.id.remove_person:
                 if (mSelectedPosition != -1 && mAdapter != null) {
-                    Person person = mAdapter.mPersons.get(mSelectedPosition);
-                    mAdapter.mPersons.remove(person);
-                    mSelectedPosition--;
+                    PersonBank.get(getActivity()).deletePerson(mSelectedPersonUUID);
                     updateUI();
                 }
                 return true;

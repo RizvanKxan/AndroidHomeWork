@@ -76,7 +76,7 @@ public class Person {
 
     public void setDate(String strDate) {
         try {
-            String pattern = "dd-MMM-yy";
+            String pattern = "dd-MM-yyyy";
             Date date = new SimpleDateFormat(pattern).parse(strDate);
             birthDay.setTime(date);
         } catch (Exception exception) {

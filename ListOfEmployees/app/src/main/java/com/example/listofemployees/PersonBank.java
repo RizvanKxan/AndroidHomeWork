@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class PersonBank {
-    List<Person> mPersonList;
     private static PersonBank sPersonBank;
     private final Context mContext;
     private SQLiteDatabase mDatabase;
@@ -30,11 +29,6 @@ public class PersonBank {
         mContext = context.getApplicationContext();
         mDatabase = new PersonBaseHelper(mContext)
                 .getWritableDatabase();
-//        mPersonList = new ArrayList<>();
-//        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
-//        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), false));
-//        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
-//        mPersonList.add(new Person("123", "321", Person.makeCalendar(1, 2, 1992), true));
     }
 
     public List<Person> getPersons() {
@@ -117,5 +111,11 @@ public class PersonBank {
         person.setSecondName(secondName);
         person.setFemale(isFemale);
         updatePerson(person);
+    }
+
+    public void deletePerson(UUID id) {
+        mDatabase.delete(PersonTable.NAME,
+                PersonTable.Cols.UUID + " = ?",
+                new String[] { id.toString()});
     }
 }

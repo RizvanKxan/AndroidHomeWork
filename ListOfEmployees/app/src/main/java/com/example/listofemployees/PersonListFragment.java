@@ -76,9 +76,16 @@ public class PersonListFragment extends Fragment {
             mAdapter.setPersons(personList);
             mAdapter.notifyDataSetChanged();
         }
+        //--- Если есть выделение, то обновляем UUID выбранного сотрудника
+        if(mSelectedPosition != -1) {
+            mSelectedPersonUUID = PersonBank.get(getActivity())
+                    .getPersons()
+                    .get(mSelectedPosition)
+                    .getId();
+        }
     }
 
-    // Добавляем командное меню к фрагменту.
+    //--- Добавляем командное меню к фрагменту.
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -109,6 +116,7 @@ public class PersonListFragment extends Fragment {
             case R.id.remove_person:
                 if (mSelectedPosition != -1 && mAdapter != null) {
                     PersonBank.get(getActivity()).deletePerson(mSelectedPersonUUID);
+                    mSelectedPosition--; // после удаления переводим выделение на предыдущий итем
                     updateUI();
                 }
                 return true;

@@ -1,2 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+<string name="app_name">List of Employees</string>
+    <string name="menuItemAdd">Add employee</string>
+    <string name="menuItemRemove">Delete employee</string>
+    <string name="menuItemEdit">Change employee</string>
+    <string name="dialog_add_person_genderMan">The male</string>
+    <string name="dialog_add_person_genderWoman">Female</string>
+    <string name="item_person_gender_image_description">Gender Image</string>
+    <string name="dialog_add_person_title">Add employee</string>
+    <string name="dialog_add_person_second_name_tv">Surname</string>
+    <string name="dialog_add_person_second_name_et">Enter last name:</string>
+    <string name="dialog_add_person_first_name_tv">Name</string>
+    <string name="dialog_add_person_first_name_et">Enter your name:</string>
+    <string name="dialog_add_person_gender_tv">Gender</string>
+    </resources>

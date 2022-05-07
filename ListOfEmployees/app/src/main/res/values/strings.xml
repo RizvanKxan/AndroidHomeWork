@@ -12,4 +12,9 @@
     <string name="dialog_add_person_first_name_tv">Имя</string>
     <string name="dialog_add_person_first_name_et">Введите имя:</string>
     <string name="dialog_add_person_gender_tv">Пол</string>
+    <string name="dialog_add_person_data">Дата рождения</string>
+    <string name="dialog_add_person_cancel">Отмена</string>
+    <string name="dialog_add_person_save">Сохранить</string>
+    <string name="dialog_add_person_error">Ошибка!</string>
+    <string name="dialog_add_person_error_text">Не удалось добавить сотрудника. Имя и Фамилия должны быть заполнены.</string>
 </resources>

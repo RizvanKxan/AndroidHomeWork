@@ -13,4 +13,9 @@
     <string name="dialog_add_person_first_name_tv">Name</string>
     <string name="dialog_add_person_first_name_et">Enter your name:</string>
     <string name="dialog_add_person_gender_tv">Gender</string>
-    </resources>
+    <string name="dialog_add_person_data">Date of Birth</string>
+    <string name="dialog_add_person_cancel">Cancel</string>
+    <string name="dialog_add_person_save">Save</string>
+    <string name="dialog_add_person_error">Error!</string>
+    <string name="dialog_add_person_error_text">Failed to add employee. First name and last name must be filled in.</string>
+</resources>

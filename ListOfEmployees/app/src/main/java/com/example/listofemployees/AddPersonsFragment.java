@@ -75,7 +75,7 @@ public class AddPersonsFragment extends DialogFragment {
         String actionString = "Создать";
 
         if (mModeDialog) {
-            actionString = "Сохранить";
+            actionString = getString(R.string.dialog_add_person_save);
             mFirstNameEditText.setText(mPerson.getFirstName());
             mSecondNameEditText.setText(mPerson.getSecondName());
 
@@ -105,8 +105,8 @@ public class AddPersonsFragment extends DialogFragment {
                         //--- если имя или фамилия пусты, то выводим сообщение об этом и не создаём новый объект
                         if (secondName.trim().length() == 0 || firstName.trim().length() == 0) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("Ошибка!")
-                                    .setMessage("Не удалось добавить сотрудника. Имя и Фамилия должны быть заполнены.")
+                            builder.setTitle(R.string.dialog_add_person_error)
+                                    .setMessage(R.string.dialog_add_person_error_text)
                                     .setPositiveButton("OK", null)
                                     .create()
                                     .show();
@@ -122,7 +122,7 @@ public class AddPersonsFragment extends DialogFragment {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton("Отмена", null)
+                .setNegativeButton(R.string.dialog_add_person_cancel, null)
                 .create();
     }
 

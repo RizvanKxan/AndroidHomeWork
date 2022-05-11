@@ -21,16 +21,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.listofemployees.database.entity.Person;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class PersonListFragment extends Fragment {
+    // Request код для получения результата от AddPersonsFragment-а.
+    private static final int REQUEST_DATE = 0;
     private RecyclerView mPersonRecyclerView;
     private PersonAdapter mAdapter;
     private int mSelectedPosition = -1;
     private UUID mSelectedPersonUUID;
-    // Request код для получения результата от AddPersonsFragment-а.
-    private static final int REQUEST_DATE = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,8 +70,20 @@ public class PersonListFragment extends Fragment {
     }
 
     private void updateUI() {
+        List<Person> personList = new ArrayList<>();
         PersonBank personBank = PersonBank.get(getActivity());
-        List<Person> personList = personBank.getPersons();
+        personBank.getPersons(new PersonBank.Result<List<Person>>() {
+            @Override
+            public void onSuccess(List<Person> people) {
+                personList.addAll(people);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+
+            }
+        });
+
         if (mAdapter == null) {
             mAdapter = new PersonAdapter(personList);
             mPersonRecyclerView.setAdapter(mAdapter);
@@ -77,13 +92,12 @@ public class PersonListFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
         //--- Если есть выделение, то обновляем UUID выбранного сотрудника
-        if(mSelectedPosition != -1) {
-            mSelectedPersonUUID = PersonBank.get(getActivity())
-                    .getPersons()
-                    .get(mSelectedPosition)
-                    .getId();
+        if (mSelectedPosition != -1) {
+            Person person = personList.get(mSelectedPosition);
+            mSelectedPersonUUID = person.getId();
         }
     }
+
 
     //--- Добавляем командное меню к фрагменту.
     @Override
@@ -126,10 +140,10 @@ public class PersonListFragment extends Fragment {
 
     private class PersonHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView mGenderImageView;
-        private TextView mFirstNameTextView;
-        private TextView mSecondNameTextView;
-        private TextView mDateTextView;
+        private final ImageView mGenderImageView;
+        private final TextView mFirstNameTextView;
+        private final TextView mSecondNameTextView;
+        private final TextView mDateTextView;
         private Person mPerson;
 
 

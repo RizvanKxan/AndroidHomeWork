@@ -20,6 +20,8 @@ import androidx.fragment.app.DialogFragment;
 import java.util.Calendar;
 import java.util.UUID;
 
+import com.example.listofemployees.database.entity.Person;
+
 public class AddPersonsFragment extends DialogFragment {
     private RadioButton mIsFemaleRadioButton;
     private RadioButton mIsMaleRadioButton;
@@ -53,7 +55,17 @@ public class AddPersonsFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         UUID mSelectedPersonUUID = (UUID) getArguments().getSerializable(ARG_PERSON_ID);
         if(mSelectedPersonUUID != null) {
-            mPerson = PersonBank.get(getActivity()).getPerson(mSelectedPersonUUID);
+            PersonBank.get(getActivity()).getPerson(new PersonBank.Result<Person>() {
+                @Override
+                public void onSuccess(Person person) {
+                    mPerson = person;
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    mPerson = null;
+                }
+            }, mSelectedPersonUUID);
         }
         initComponent();
     }

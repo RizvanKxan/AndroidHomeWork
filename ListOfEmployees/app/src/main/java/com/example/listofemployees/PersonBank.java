@@ -1,121 +1,100 @@
 package com.example.listofemployees;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-import com.example.listofemployees.database.PersonBaseHelper;
-import com.example.listofemployees.database.PersonCursorWrapper;
-import com.example.listofemployees.database.PersonDbScheme.PersonTable;
+import com.example.listofemployees.database.AppDatabase;
+import com.example.listofemployees.database.dao.PersonDao;
+import com.example.listofemployees.database.entity.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PersonBank {
     private static PersonBank sPersonBank;
-    private final Context mContext;
-    private SQLiteDatabase mDatabase;
+    private final PersonDao personDao;
+    private final AppDatabase db;
+    private final ExecutorService executorService;
+
+    private PersonBank(Context context, ExecutorService executorService) {
+        this.executorService = executorService;
+        Context mContext = context.getApplicationContext();
+
+        db = App.getInstance().getDatabase();
+        personDao = db.personDao();
+    }
 
     public static PersonBank get(Context context) {
         if (sPersonBank == null) {
-            sPersonBank = new PersonBank(context);
+            sPersonBank = new PersonBank(context, Executors.newSingleThreadExecutor());
         }
         return sPersonBank;
     }
 
-    private PersonBank(Context context) {
-        mContext = context.getApplicationContext();
-        mDatabase = new PersonBaseHelper(mContext)
-                .getWritableDatabase();
-    }
-
-    public List<Person> getPersons() {
-        List<Person> persons = new ArrayList<>();
-
-        PersonCursorWrapper cursor = queryPersons(null,null);
-
-        try {
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast()) {
-                persons.add(cursor.getPerson());
-                cursor.moveToNext();
+    public void getPersons(Result<List<Person>> listener) {
+        executorService.execute(() -> {
+            try {
+                List<Person> personList = personDao.getAll();
+                listener.onSuccess(personList);
+            } catch (Exception exception) {
+                listener.onError(exception);
             }
-        } finally {
-            cursor.close();
-        }
-
-        return persons;
+        });
     }
 
-    private PersonCursorWrapper queryPersons(String whereClause, String[] whereArgs) {
-        Cursor cursor = mDatabase.query(
-                PersonTable.NAME,
-                null,
-                whereClause,
-                whereArgs,
-                null,
-                null,
-                null
-        );
-        return new PersonCursorWrapper(cursor);
-    }
-
-    public Person getPerson(UUID id) {
-        PersonCursorWrapper cursor = queryPersons(
-                PersonTable.Cols.UUID + " = ?",
-                new String[] { id.toString()}
-        );
-
-        try {
-            if(cursor.getCount() == 0) {
-                return null;
+    public void getPerson(Result<Person> listener, UUID uuid) {
+        executorService.execute(() -> {
+            try {
+                Person person = personDao.getById(uuid);
+                listener.onSuccess(person);
+            } catch (Exception exception) {
+                listener.onError(exception);
             }
-
-            cursor.moveToFirst();
-            return cursor.getPerson();
-        } finally {
-            cursor.close();
-        }
-    }
-
-    public void updatePerson(Person person) {
-        String uuidString = person.getId().toString();
-        ContentValues values = getContentValues(person);
-
-        mDatabase.update(PersonTable.NAME, values,
-                PersonTable.Cols.UUID + " = ?",
-                new String[] { uuidString});
-    }
-
-    public static ContentValues getContentValues(Person person) {
-        ContentValues values = new ContentValues();
-        values.put(PersonTable.Cols.UUID, person.getId().toString());
-        values.put(PersonTable.Cols.FIRST_NAME, person.getFirstName());
-        values.put(PersonTable.Cols.SECOND_NAME, person.getSecondName());
-        values.put(PersonTable.Cols.FEMALE, person.isFemale ? 1 : 0);
-        values.put(PersonTable.Cols.BIRTHDAY, person.getBirthDayString());
-        return values;
+        });
     }
 
     public void addPerson(Person person) {
-        ContentValues values = getContentValues(person);
-
-        mDatabase.insert(PersonTable.NAME, null, values);
+        executorService.execute(() -> personDao.insertPerson(person));
     }
 
     public void editPerson(UUID id, String firstName, String secondName, boolean isFemale) {
-        Person person = getPerson(id);
+        Person person = new Person();
+                getPerson(new Result<Person>() {
+                    @Override
+                    public void onSuccess(Person person) {
+                        person = person;
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+
+                    }
+                }, id);
         person.setFirstName(firstName);
         person.setSecondName(secondName);
         person.setFemale(isFemale);
-        updatePerson(person);
+        executorService.execute(() -> personDao.updatePerson(person));
     }
 
     public void deletePerson(UUID id) {
-        mDatabase.delete(PersonTable.NAME,
-                PersonTable.Cols.UUID + " = ?",
-                new String[] { id.toString()});
+        Person person = new Person();
+        getPerson(new Result<Person>() {
+            @Override
+            public void onSuccess(Person person) {
+                person = person;
+            }
+
+            @Override
+            public void onError(Exception exception) {
+
+            }
+        }, id);
+        executorService.execute(() -> personDao.deletePerson(person));
+    }
+
+    public interface Result<T> {
+        void onSuccess(T t);
+        void onError(Exception exception);
     }
 }

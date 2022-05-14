@@ -1,9 +1,13 @@
 package com.example.listofemployees;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.listofemployees.database.entity.Person;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,9 +16,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import com.example.listofemployees.database.entity.Person;
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
+    private static final String FILE_NAME = "person.json";
     //
     //
     //
@@ -26,7 +30,7 @@ public class MainActivity extends AppCompatActivity{
     //
     //
     private ArrayList<Person> personList = new ArrayList<>();
-    private static final String FILE_NAME = "person.json";
+
     //--- Записываем список с сотрудниками в файл в виде json.
     public void savePersonsToFile(MainActivity view) {
         boolean result = exportToJSON();
@@ -36,7 +40,8 @@ public class MainActivity extends AppCompatActivity{
     public void getPersonsFromFile(MainActivity view) {
         try {
             personList = importFromJSON();
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
 
     }
 
@@ -45,7 +50,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         //--- Если файла не существует, то создаём его ------------
-        if(!getExternalPath().exists()) {
+        if (!getExternalPath().exists()) {
             savePersonsToFile(this);
         }
 
@@ -61,8 +66,8 @@ public class MainActivity extends AppCompatActivity{
         Gson gson = new Gson();
         String jsonString = gson.toJson(personList);
 
-        try(FileOutputStream fileOutputStream =
-                    new FileOutputStream(getExternalPath())) {
+        try (FileOutputStream fileOutputStream =
+                     new FileOutputStream(getExternalPath())) {
             fileOutputStream.write(jsonString.getBytes());
             return true;
         } catch (Exception e) {
@@ -74,11 +79,12 @@ public class MainActivity extends AppCompatActivity{
 
     ArrayList<Person> importFromJSON() {
         File file = getExternalPath();
-        if(file.exists()) {
+        if (file.exists()) {
             try (FileInputStream fileInputStream = new FileInputStream(file);
                  InputStreamReader streamReader = new InputStreamReader(fileInputStream)) {
                 Gson gson = new Gson();
-                Type listType = new TypeToken<ArrayList<Person>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<Person>>() {
+                }.getType();
                 ArrayList<Person> dataItems;
                 dataItems = gson.fromJson(streamReader, listType);
                 return dataItems;

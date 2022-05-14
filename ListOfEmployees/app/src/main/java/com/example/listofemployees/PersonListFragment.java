@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,14 +24,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.listofemployees.database.entity.Person;
+import com.example.listofemployees.service.ApiService;
+import com.example.listofemployees.service.PersonRepository;
+import com.example.listofemployees.service.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PersonListFragment extends Fragment {
     // Request код для получения результата от AddPersonsFragment-а.
     private static final int REQUEST_DATE = 0;
+    private final PersonRepository personRepository = new PersonRepository(
+            ApiService.Factory.create()
+    );
+    Handler handler = new Handler();
     private RecyclerView mPersonRecyclerView;
     private PersonAdapter mAdapter;
     private int mSelectedPosition = -1;
@@ -70,12 +84,11 @@ public class PersonListFragment extends Fragment {
     }
 
     private void updateUI() {
-        List<Person> personList = new ArrayList<>();
         PersonBank personBank = PersonBank.get(getActivity());
         personBank.getPersons(new PersonBank.Result<List<Person>>() {
             @Override
             public void onSuccess(List<Person> people) {
-                personList.addAll(people);
+                handler.post(() -> action(people));
             }
 
             @Override
@@ -83,21 +96,25 @@ public class PersonListFragment extends Fragment {
 
             }
         });
-
-        if (mAdapter == null) {
-            mAdapter = new PersonAdapter(personList);
-            mPersonRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setPersons(personList);
-            mAdapter.notifyDataSetChanged();
-        }
-        //--- Если есть выделение, то обновляем UUID выбранного сотрудника
-        if (mSelectedPosition != -1) {
-            Person person = personList.get(mSelectedPosition);
-            mSelectedPersonUUID = person.getId();
-        }
     }
 
+    void action(List<Person> persons) {
+        if (mAdapter == null) {
+            mAdapter = new PersonAdapter(persons);
+            mPersonRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setPersons(persons);
+            //--- Если есть выделение, то обновляем UUID выбранного сотрудника
+            if (mSelectedPosition != -1) {
+                Log.d("TEST_SIZE", String.valueOf(persons.size()));
+                if (persons.size() > 0) {
+                    Person person = persons.get(mSelectedPosition);
+                    mSelectedPersonUUID = person.uuid;
+                }
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+    }
 
     //--- Добавляем командное меню к фрагменту.
     @Override
@@ -129,13 +146,50 @@ public class PersonListFragment extends Fragment {
                 return true;
             case R.id.remove_person:
                 if (mSelectedPosition != -1 && mAdapter != null) {
-                    PersonBank.get(getActivity()).deletePerson(mSelectedPersonUUID);
+                    PersonBank personBank = PersonBank.get(getActivity());
+                    Person person = mAdapter.mPersons.get(mSelectedPosition);
+                    personBank.deletePerson(person);
                     mSelectedPosition--; // после удаления переводим выделение на предыдущий итем
                     updateUI();
+                    // PersonBank.get(getActivity()).stop();
+
                 }
                 return true;
+            case R.id.add_person_network:
+                personRepository.getUsers().enqueue(new Callback<List<User>>() {
+                    @Override
+                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                        List<User> users = response.body();
+                        List<Person> persons;
+                        persons = userConvert(users);
+                        if (persons != null) {
+                            for (Person person : persons) {
+                                PersonBank.get(getActivity()).addPerson(person);
+                            }
+                            updateUI();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<User>> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private List<Person> userConvert(List<User> users) {
+        List<Person> pers = new ArrayList<>();
+        for (User user : users) {
+            Person person = new Person();
+            person.setFirstName(user.username);
+            person.setSecondName(user.name);
+            person.isFemale = new Random().nextBoolean();
+            person.birthDay = Person.randomCalendar();
+            pers.add(person);
+        }
+        return pers;
     }
 
     private class PersonHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

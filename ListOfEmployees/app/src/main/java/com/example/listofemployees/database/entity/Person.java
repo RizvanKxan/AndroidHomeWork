@@ -10,6 +10,7 @@ import androidx.room.TypeConverters;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 @Entity(tableName = "persons")
@@ -51,6 +52,13 @@ public class Person {
         C.set(Calendar.MONTH, month - 1);
         C.set(Calendar.DAY_OF_MONTH, day);
         return C;
+    }
+
+    public static Calendar randomCalendar() {
+        int day = new Random().nextInt(30);
+        int month = new Random().nextInt(12);
+        int year = new Random().nextInt(2022 - 1960) + 1960;
+        return makeCalendar(day, month, year);
     }
 
     public UUID getId() {

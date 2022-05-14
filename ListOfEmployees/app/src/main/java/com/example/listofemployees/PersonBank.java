@@ -59,42 +59,26 @@ public class PersonBank {
     }
 
     public void editPerson(UUID id, String firstName, String secondName, boolean isFemale) {
-        Person person = new Person();
-                getPerson(new Result<Person>() {
-                    @Override
-                    public void onSuccess(Person person) {
-                        person = person;
-                    }
+        executorService.execute(() -> {
+            try {
+                Person person = personDao.getById(id);
+                person.setFirstName(firstName);
+                person.setSecondName(secondName);
+                person.setFemale(isFemale);
+                personDao.updatePerson(person);
+            } catch (Exception ex) {
 
-                    @Override
-                    public void onError(Exception exception) {
-
-                    }
-                }, id);
-        person.setFirstName(firstName);
-        person.setSecondName(secondName);
-        person.setFemale(isFemale);
-        executorService.execute(() -> personDao.updatePerson(person));
+            }
+        });
     }
 
-    public void deletePerson(UUID id) {
-        Person person = new Person();
-        getPerson(new Result<Person>() {
-            @Override
-            public void onSuccess(Person person) {
-                person = person;
-            }
-
-            @Override
-            public void onError(Exception exception) {
-
-            }
-        }, id);
+    public void deletePerson(Person person) {
         executorService.execute(() -> personDao.deletePerson(person));
     }
 
     public interface Result<T> {
         void onSuccess(T t);
+
         void onError(Exception exception);
     }
 }

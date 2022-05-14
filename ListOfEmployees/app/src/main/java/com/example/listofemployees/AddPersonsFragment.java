@@ -17,12 +17,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.listofemployees.database.entity.Person;
+
 import java.util.Calendar;
 import java.util.UUID;
 
-import com.example.listofemployees.database.entity.Person;
-
 public class AddPersonsFragment extends DialogFragment {
+    public static final String ARG_PERSON_ID = "curr_person_id";
+    private static Boolean mModeDialog;
     private RadioButton mIsFemaleRadioButton;
     private RadioButton mIsMaleRadioButton;
     private EditText mFirstNameEditText;
@@ -30,16 +32,8 @@ public class AddPersonsFragment extends DialogFragment {
     private TextView mDateTextView;
     private DatePicker mDatePicker;
     private Person mPerson;
-    private static Boolean mModeDialog;
-    public static final String ARG_PERSON_ID = "curr_person_id";
     private IAction action;
     private View dialogView;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        action = (IAction) context;
-    }
 
     public static AddPersonsFragment newInstance(Boolean mode, UUID selectedPersonUUID) {
         mModeDialog = mode;
@@ -51,10 +45,16 @@ public class AddPersonsFragment extends DialogFragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        action = (IAction) context;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID mSelectedPersonUUID = (UUID) getArguments().getSerializable(ARG_PERSON_ID);
-        if(mSelectedPersonUUID != null) {
+        if (mSelectedPersonUUID != null) {
             PersonBank.get(getActivity()).getPerson(new PersonBank.Result<Person>() {
                 @Override
                 public void onSuccess(Person person) {

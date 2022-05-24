@@ -58,6 +58,10 @@ public class PersonBank {
         executorService.execute(() -> personDao.insertPerson(person));
     }
 
+    public void addPersonList(List<Person> persons) {
+        executorService.execute(() -> personDao.insertAllPerson(persons));
+    }
+
     public void editPerson(UUID id, String firstName, String secondName, boolean isFemale) {
         executorService.execute(() -> {
             try {

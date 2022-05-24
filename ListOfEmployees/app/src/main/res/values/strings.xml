@@ -3,6 +3,7 @@
     <string name="menuItemAdd">Добавить сотрудника</string>
     <string name="menuItemRemove">Удалить сотрудника</string>
     <string name="menuItemEdit">Изменить сотрудника</string>
+    <string name="menuItemAddFromNetwork">Добавить сотрудников из интернета</string>
     <string name="dialog_add_person_genderMan">Мужчина</string>
     <string name="dialog_add_person_genderWoman">Женщина</string>
     <string name="item_person_gender_image_description">Gender Image</string>
@@ -17,4 +18,6 @@
     <string name="dialog_add_person_save">Сохранить</string>
     <string name="dialog_add_person_error">Ошибка!</string>
     <string name="dialog_add_person_error_text">Не удалось добавить сотрудника. Имя и Фамилия должны быть заполнены.</string>
+    <string name="button_name_create">Создать</string>
+    <string name="button_name_ok">Ок</string>
 </resources>

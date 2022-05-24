@@ -24,6 +24,9 @@ public interface PersonDao {
     @Insert(onConflict = REPLACE)
     void insertPerson(Person person);
 
+    @Insert(onConflict = REPLACE)
+    void insertAllPerson(List<Person> persons);
+
     @Delete
     void deletePerson(Person person);
 

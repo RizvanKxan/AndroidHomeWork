@@ -15,5 +15,5 @@
     <item
         android:id="@+id/add_person_network"
         android:orderInCategory="3"
-        android:title="Добавить сотрудников из интернета"/>
+        android:title="@string/menuItemAddFromNetwork"/>
 </menu>

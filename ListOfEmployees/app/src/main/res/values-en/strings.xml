@@ -4,6 +4,7 @@
     <string name="menuItemAdd">Add employee</string>
     <string name="menuItemRemove">Delete employee</string>
     <string name="menuItemEdit">Change employee</string>
+    <string name="menuItemAddFromNetwork">Add employees from the Internet</string>
     <string name="dialog_add_person_genderMan">The male</string>
     <string name="dialog_add_person_genderWoman">Female</string>
     <string name="item_person_gender_image_description">Gender Image</string>
@@ -18,4 +19,6 @@
     <string name="dialog_add_person_save">Save</string>
     <string name="dialog_add_person_error">Error!</string>
     <string name="dialog_add_person_error_text">Failed to add employee. First name and last name must be filled in.</string>
+    <string name="button_name_create">Create</string>
+    <string name="button_name_ok">Ok</string>
 </resources>

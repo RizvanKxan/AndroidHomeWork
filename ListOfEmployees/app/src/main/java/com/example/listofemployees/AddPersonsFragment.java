@@ -84,7 +84,7 @@ public class AddPersonsFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String actionString = "Создать";
+        String actionString = "@string/button_name_create";
 
         if (mModeDialog) {
             actionString = getString(R.string.dialog_add_person_save);
@@ -119,7 +119,7 @@ public class AddPersonsFragment extends DialogFragment {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setTitle(R.string.dialog_add_person_error)
                                     .setMessage(R.string.dialog_add_person_error_text)
-                                    .setPositiveButton("OK", null)
+                                    .setPositiveButton("@string/button_name_ok", null)
                                     .create()
                                     .show();
                         } else {

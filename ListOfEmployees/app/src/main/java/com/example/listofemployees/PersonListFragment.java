@@ -106,7 +106,6 @@ public class PersonListFragment extends Fragment {
             mAdapter.setPersons(persons);
             //--- Если есть выделение, то обновляем UUID выбранного сотрудника
             if (mSelectedPosition != -1) {
-                Log.d("TEST_SIZE", String.valueOf(persons.size()));
                 if (persons.size() > 0) {
                     Person person = persons.get(mSelectedPosition);
                     mSelectedPersonUUID = person.uuid;
@@ -127,7 +126,7 @@ public class PersonListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean isEditingMode;
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getActivity().getSupportFragmentManager();
         AddPersonsFragment dialog;
         switch (item.getItemId()) {
             case R.id.add_person:
@@ -151,7 +150,6 @@ public class PersonListFragment extends Fragment {
                     personBank.deletePerson(person);
                     mSelectedPosition--; // после удаления переводим выделение на предыдущий итем
                     updateUI();
-                    // PersonBank.get(getActivity()).stop();
 
                 }
                 return true;
@@ -160,14 +158,14 @@ public class PersonListFragment extends Fragment {
                     @Override
                     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                         List<User> users = response.body();
-                        List<Person> persons;
-                        persons = userConvert(users);
-                        if (persons != null) {
-                            for (Person person : persons) {
-                                PersonBank.get(getActivity()).addPerson(person);
-                            }
+                        if(users != null) {
+                            List<Person> persons = userConvert(users);
+                            PersonBank.get(getActivity()).addPersonList(persons);
                             updateUI();
+                        } else {
+                            //если не получили пользователей
                         }
+                        
                     }
 
                     @Override
